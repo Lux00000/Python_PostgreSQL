@@ -2,6 +2,7 @@ from typing import List
 from typing import Optional
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import relationship
@@ -19,8 +20,8 @@ class Customer(Base):
     __table_args__ = {"extend_existing": True}
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(50))
-    email: Mapped[str] = mapped_column(String(50))
+    name: Mapped[str]
+    email: Mapped[str]
 
     def __repr__(self) -> str:
 
@@ -63,8 +64,26 @@ class CartProduct(Base):
     cart_id: Mapped[int] = mapped_column(ForeignKey("cart.id"), primary_key=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("product.id"), primary_key=True)
 
-
-
-
 Base.metadata.create_all(engine)
+print("well")
+
+with Session(engine) as session:
+    spongebob = Customer(
+        name = "spongebob",
+        email="spongebob@sqlalchemy.org"
+    )
+
+    sandy = Customer(
+    name = "sandy",
+    email ="sandy@sqlalchemy.org"
+
+    )
+session.add_all([spongebob, sandy])
+session.commit()
+
+
+
+
+
+
 print("well")
